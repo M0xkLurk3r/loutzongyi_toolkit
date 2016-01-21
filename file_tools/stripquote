@@ -27,13 +27,14 @@ fi
 
 if [ "$1" == "--version" ]; then
 	echo "Strip Quote: Strip the fucking quote from your configuration file!";
-	echo "Copyright (C) NSS TEAM.";
-	echo "Written by M0xklurk3r (https://github.com/M0xkLurk3r), includes with Loutzongyi toolkit.";
+	echo "Copyright (C) NSS TEAM, includes with Loutzongyi toolkit.";
+	echo "Written by M0xklurk3r (https://github.com/M0xkLurk3r).";
 	echo "License GPLv3+: GNU GPL version 3 or later (http://gnu.org/licenses/gpl.html)";
 	echo "";
-	echo "This is a free, GNU software, you have your rights to use, change, even redistribute it, ";
-	echo "But you MUST obey the GNU GPL license after this software serve your business in any way.";
-	echo "This software comes with ABSOLUTELY NO WARRANTY, to the extent permitted by applicable law.";
+	echo "This is a free, GNU software, you are allowed to use, change, even redistribute,";
+	echo "But you MUST obey the GPL license after any serves on your business.";
+	echo "This software comes with ABSOLUTELY NO WARRANTY, ";
+	echo "to the extent permitted by applicable law.";
 	echo "";
 	exit 1;
 fi
