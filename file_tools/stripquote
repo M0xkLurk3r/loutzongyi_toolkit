@@ -1,0 +1,105 @@
+#! /bin/bash
+
+INPUT_FILE="";
+INPUT_FILE_ARGV_COUNT=0;
+OUTPUT_FILE="";
+OUTPUT_FILE_ARGV_COUNT=0;
+FILE_QUOTE="";
+FILE_QUOTE_ARGV_COUNT=0;
+NO_BLANK_LINE=0;
+counter=0;
+
+
+if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+	echo "Strip Quote: Strip the fucking quote from your configuration file!";
+	echo "";
+	echo "Usage: "${0}" [Option][--file]";
+	echo "";
+	echo "	-f  --file	The file which input (Default: stdin)";
+	echo "	-nb --no-blank	No blank line in output file.";
+	echo "	-s  --sign	The quote of your configuration file (Default: \"#\")";
+	echo "	-o  --output	The file which output (Default: stdout)";
+	echo "	-h  --help	Show this help.";
+	echo "	    --version	Show GNU GPL short license.";
+	echo "";
+	exit 1
+fi
+
+if [ "$1" == "--version" ]; then
+	echo "Strip Quote: Strip the fucking quote from your configuration file!";
+	echo "Copyright (C) NSS TEAM.";
+	echo "Written by M0xklurk3r (https://github.com/M0xkLurk3r), includes with Loutzongyi toolkit.";
+	echo "License GPLv3+: GNU GPL version 3 or later (http://gnu.org/licenses/gpl.html)";
+	echo "";
+	echo "This is a free, GNU software, you have your rights to use, change, even redistribute it, ";
+	echo "But you MUST obey the GNU GPL license after this software serve your business in any way.";
+	echo "This software comes with ABSOLUTELY NO WARRANTY, to the extent permitted by applicable law.";
+	echo "";
+	exit 1;
+fi
+
+counter=0;
+for arg in $@
+do
+	counter=`expr $counter + 1`;
+#	echo ${@}"="${arg};
+	if [ "$arg" = "--file" ] || [ "$arg" = "-f" ]; then
+		INPUT_FILE_ARGV_COUNT=`expr $counter + 1`;
+	fi
+	if [ "$arg" = "--sign" ] || [ "$arg" = "-s" ]; then
+		FILE_QUOTE_ARGV_COUNT=`expr $counter + 1`;
+	fi
+	if [ "$arg" = "--output" ] || [ "$arg" = "-o" ]; then
+		OUTPUT_FILE_ARGV_COUNT=`expr $counter + 1`;
+	fi
+	if [ "$arg" = "--no-blank" ] || [ "$arg" = "-nb" ]; then
+                NO_BLANK_LINE=1;
+        fi
+	if [ $counter -eq $INPUT_FILE_ARGV_COUNT ]; then
+		INPUT_FILE=$arg;
+	fi
+	if [ $counter -eq $OUTPUT_FILE_ARGV_COUNT ]; then
+		OUTPUT_FILE=$arg;
+	fi;
+	if [ $counter -eq $FILE_QUOTE_ARGV_COUNT ]; then
+		FILE_QUOTE=$arg;
+	fi;
+done
+
+if [ ! -f $INPUT_FILE ]; then
+	echo ${0}": The file \""${INPUT_FILE}"\" seems not exist!";
+	echo ${0}": Exiting.";
+	exit 1
+fi
+
+if [ -f $OUTPUT_FILE ] && [ "" != "$OUTPUT_FILE" ]; then
+	echo ${0}": The output file \""${OUTPUT_FILE}"\" seems existed.";
+	echo -n ${0}": Answer Y to truncate, or I have to add these data after existing data in this file (Y/N) ";
+	read -n 1 answer;
+	echo -n " ";
+	if [ "$answer" = "Y" ] || [ "$answer" = "y" ]; then
+		> $OUTPUT_FILE;
+	fi
+fi
+
+if [ "" = "$OUTPUT_FILE" ]; then
+	OUTPUT_FILE="/dev/stdout";
+fi
+
+if [ "" = "$INPUT_FILE" ]; then
+	INPUT_FILE="/dev/stdin";
+fi
+
+if [ "" = "$FILE_QUOTE" ]; then
+	FILE_QUOTE="#";		
+#	By default, the defaukt quote in they configuation file was '#'.
+fi
+
+cat $INPUT_FILE | while read line
+do
+	if [ "$FILE_QUOTE" != "${line:0:${#FILE_QUOTE}}" ]; then
+		if [ "" != "$line" ] || [ $NO_BLANK_LINE -eq 0 ]; then
+			echo $line >> $OUTPUT_FILE
+		fi
+	fi
+done
